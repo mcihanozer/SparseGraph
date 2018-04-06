@@ -1,3 +1,5 @@
+// M. Cihan Ozer - March 2017
+
 using UnityEngine;
 
 public static class ErrorPrinter
