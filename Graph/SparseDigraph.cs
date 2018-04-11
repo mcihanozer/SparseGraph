@@ -1,6 +1,7 @@
 // M. Cihan Ozer - March 2017
 
 using System;
+using System.Collections.Generic;
 using GraphCommons;
 
 // Digraph (directed graph) with adjacency list representation
@@ -127,5 +128,19 @@ public class SparseDigraph<NodeType, EdgeType> : AbstractGraph<NodeType, EdgeTyp
         {
             EdgeCommons.RemoveFromLinkedList<EdgeType>(this.edges, from, to);
         }
+    }
+
+    // Returns the all possible paths from given node
+    // Serves to path finding algorithms
+    public override List<EdgeType> GetLeadingEdges(int nodeIndex)
+    {
+        List<EdgeType> edgeList = new List<EdgeType>();
+
+        foreach(EdgeType edge in this.edges[nodeIndex] )
+        {
+            edgeList.Add(edge);
+        }
+
+        return edgeList;
     }
 }
