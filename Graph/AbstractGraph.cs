@@ -46,6 +46,9 @@ public abstract class AbstractGraph<NodeType, EdgeType>
     // Removes the edge if present.
     public abstract void RemoveEdge(int from, int to);
 
+    // Returns list of the edges that can be led from a given node 
+    public abstract List<EdgeType> GetLeadingEdges(int nodeIndex);
+
     private void RemoveAllEdges()
     {
         for (int eli = 0; eli < this.edges.Count; ++eli)
@@ -119,7 +122,7 @@ public abstract class AbstractGraph<NodeType, EdgeType>
     // This version handles memory allocation on its own and minimise the garbage
     // creation. If a formerly invalid node is trying to adding (reactivation)
     // instead of creating a new node, the invalidated one is reactivated.
-    public int AddNode(params object[] initializerList)
+    public virtual int AddNode(params object[] initializerList)
     {
         int nodeId = (int)initializerList[0];
 
@@ -157,7 +160,7 @@ public abstract class AbstractGraph<NodeType, EdgeType>
 
     // Adds a node to the graph and returns its index
     // WARNING THIS MAY CREATE GARBAGE COLLECTION
-    public int AddNode(NodeType node)
+    public virtual int AddNode(NodeType node)
     {
         if (node.Id < this.nodes.Count)
         {
@@ -327,30 +330,4 @@ public abstract class AbstractGraph<NodeType, EdgeType>
 
         return false;
     }
-
-    public void DebugPrint()
-    {
-        Debug.Log("*** SparseGraph.DebugPrint() ***");
-        Debug.Log("SP.DEBUG BEGINS!!!");
-
-        Debug.Log("********** NODES **********");
-        foreach (var node in this.nodes)
-        {
-            Debug.Log( node.ToString() );
-        }
-
-        Debug.Log("********** EDGES **********");
-        foreach (var edgeList in this.edges)
-        {
-            foreach (var edge in edgeList)
-            {
-                Debug.Log( edge.ToString() );
-            }
-        }
-
-        Debug.Log("SP.DEBUG ENDS!!!");
-        Debug.Log("*** SparseGraph.DebugPrint() ***");
-    }
-
 }
-
