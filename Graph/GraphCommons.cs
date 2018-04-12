@@ -43,7 +43,6 @@ namespace GraphCommons
 
     }
 
-    //public static class GraphSearchCommons
     namespace GraphSearchCommons
     {
         public static class GraphSearchCommons
