@@ -3,8 +3,7 @@
 using System;
 using System.Collections.Generic;
 using GraphCommons;
-
-using UnityEngine;  // Because of SparseGraph.DebugPrint()
+using GraphCommons.GraphSearchCommons;
 
 // Base graph class with adjacency list representation
 public abstract class AbstractGraph<NodeType, EdgeType>
@@ -47,7 +46,7 @@ public abstract class AbstractGraph<NodeType, EdgeType>
     public abstract void RemoveEdge(int from, int to);
 
     // Returns list of the edges that can be led from a given node 
-    public abstract List<EdgeType> GetLeadingEdges(int nodeIndex);
+    public abstract List<HelperEdge> GetLeadingEdges(int nodeIndex);
 
     private void RemoveAllEdges()
     {
@@ -331,3 +330,4 @@ public abstract class AbstractGraph<NodeType, EdgeType>
         return false;
     }
 }
+
