@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using GraphCommons;
+using GraphCommons.GraphSearchCommons;
 
 // Digraph (directed graph) with adjacency list representation
 public class SparseDigraph<NodeType, EdgeType> : AbstractGraph<NodeType, EdgeType>
@@ -132,13 +133,14 @@ public class SparseDigraph<NodeType, EdgeType> : AbstractGraph<NodeType, EdgeTyp
 
     // Returns the all possible paths from given node
     // Serves to path finding algorithms
-    public override List<EdgeType> GetLeadingEdges(int nodeIndex)
+    public override List<HelperEdge> GetLeadingEdges(int nodeIndex)
     {
-        List<EdgeType> edgeList = new List<EdgeType>();
+        List<HelperEdge> edgeList = new List<HelperEdge>();
 
-        foreach(EdgeType edge in this.edges[nodeIndex] )
+        foreach (EdgeType edge in this.edges[nodeIndex])
         {
-            edgeList.Add(edge);
+            HelperEdge newEdge = new HelperEdge(edge.FromNode, edge.ToNode, 0f);
+            edgeList.Add(newEdge);
         }
 
         return edgeList;
