@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using GraphCommons;
+using GraphCommons.GraphSearchCommons;
 
 // Graph with adjacency list representation
 //
@@ -280,14 +281,13 @@ public class SparseGraph<NodeType, EdgeType> : AbstractGraph<NodeType, EdgeType>
 
     // Returns the all possible paths from given node
     // Serves to path finding algorithms
-    public override List<EdgeType> GetLeadingEdges(int nodeIndex)
+    public override List<HelperEdge> GetLeadingEdges(int nodeIndex)
     {
-        List<EdgeType> edgeList = new List<EdgeType>();
+        List<HelperEdge> edgeList = new List<HelperEdge>();
 
-        foreach(var edgeId in adjacencyList[nodeIndex])
+        foreach (var edgeId in adjacencyList[nodeIndex])
         {
-            EdgeType newEdge = Activator.CreateInstance<EdgeType>();
-            newEdge.Init(nodeIndex, edgeId, 0f);
+            HelperEdge newEdge = new HelperEdge(nodeIndex, edgeId, 0f);
             edgeList.Add(newEdge);
         }
 
