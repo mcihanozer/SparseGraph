@@ -5,7 +5,11 @@ using System.Collections.Generic;
 using GraphCommons;
 using GraphCommons.GraphSearchCommons;
 
-// Graph deep first search algorithm
+// Graph depth first search (DFS) algorithm
+//
+// Performs less search operation than breadth first search (BFS),
+// guarantees find the path if one exist, but does not guarantees
+// that the found path contains the fewest edges possible.
 public class GraphDFS<NodeType, EdgeType>
         where NodeType : GraphNode
         where EdgeType : GraphEdge
