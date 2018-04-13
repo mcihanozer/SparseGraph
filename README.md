@@ -11,3 +11,5 @@ Since I am using it in Unity, there are some Unity dependencies, but not more th
               operations, returning all possible paths for a pathfinding algorithm, etc.
               
 **Update 2:** HelperEdge structure for graph search is introduced to decrease garbage creation and CPU usage.
+
+**Update 3** Depth first search (DFS) and  Breadth first search (BFS) algorithms are added.
