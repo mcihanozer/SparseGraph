@@ -1,7 +1,7 @@
 # SparseGraph
 
-Sparse graph implementation for Unity with C#. It includes graph and directed graph impelementations with
-adjacency list representation.
+Sparse graph and graph search algorithms implementation for Unity with C#. It includes graph and directed graph
+impelementations with adjacency list representation.
 
 Since I am using it in Unity, there are some Unity dependencies, but not more then Debug.Log() and Vector2.
 
