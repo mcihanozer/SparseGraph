@@ -1,8 +1,6 @@
 // M. Cihan Ozer - April 2017
 
-using System.Linq;
 using System.Collections.Generic;
-using GraphCommons;
 using GraphCommons.GraphSearchCommons;
 
 // Graph depth first search (DFS) algorithm
@@ -10,21 +8,11 @@ using GraphCommons.GraphSearchCommons;
 // Perform less search operation than breadth first search (BFS),
 // guarantees find the path if one exist, but does not guarantees
 // that the found path contains the fewest edges possible.
-public class GraphDFS<NodeType, EdgeType>
+sealed class GraphDFS<NodeType, EdgeType> : AbstractGraphSearch<NodeType, EdgeType>
         where NodeType : GraphNode
         where EdgeType : GraphEdge
 {
     private Stack<HelperEdge> searchStack;
-
-    // To keep track of the visited nodes
-    private List<GraphSearchCommons.SearchFlags> visitingList;
-
-    // Helper list to find out the route.
-    //
-    // Indices of the list are associated with the nodes, and each list element
-    // holds index of its parent. For example, if the path is 0 - 3 - 12, then
-    // route[3] holds 0, route[12] holds 3.
-    private List<int> route;
 
     public GraphDFS()
     {
@@ -36,36 +24,16 @@ public class GraphDFS<NodeType, EdgeType>
         Init(nodeSize);
     }
 
-    private void Init(int size)
+    protected override void Init(int size)
     {
         searchStack = new Stack<HelperEdge>(size);
-
-        visitingList = Enumerable.Repeat(
-                                            GraphSearchCommons.SearchFlags.unvisited,
-                                            size
-                                        ).ToList();
-
-        route = Enumerable.Repeat(
-                                    (int)GraphSearchCommons.SearchStateFlags.noParentAssinged,
-                                    size
-                                 ).ToList();
-
+        base.Init(size);
     }
 
-    private void Reset()
+    protected override void Reset()
     {
         searchStack.Clear();
-
-        for (int li = 0; li < visitingList.Count; ++li)
-        {
-            visitingList[li] = GraphSearchCommons.SearchFlags.unvisited;
-        }
-
-        for (int li = 0; li < route.Count; ++li)
-        {
-            route[li] = (int)GraphSearchCommons.SearchStateFlags.noParentAssinged;
-        }
-
+        base.Reset();
     }
 
     // Finds the path between source and target indices.
@@ -73,21 +41,8 @@ public class GraphDFS<NodeType, EdgeType>
     // Returns true if a path exists, returns false otherwise.
     //
     // TODO Replace ref with in if one day Unity supports C# 7+
-    public bool FindPath(int sourceIndex, int targetIndex, AbstractGraph<NodeType, EdgeType> sourceGraph)
+    protected override bool FindPath(int sourceIndex, int targetIndex, AbstractGraph<NodeType, EdgeType> sourceGraph)
     {
-        var validation = validateTheSearch(sourceIndex, targetIndex, sourceGraph);
-        if (validation == GraphSearchCommons.SearchValidationFlgas.invalidIndices)
-        {
-            return false;
-        }
-        else if (validation == GraphSearchCommons.SearchValidationFlgas.atTheTarget)
-        {
-            return true;
-        }
-
-        // Preparation for the search
-        Reset();
-
         HelperEdge startEdge = new HelperEdge(sourceIndex, sourceIndex, 0f);
 
         searchStack.Push(startEdge);
@@ -136,25 +91,12 @@ public class GraphDFS<NodeType, EdgeType>
     // Returns true if a path exists, returns false otherwise.
     //
     // TODO Replace ref with in if one day Unity supports C# 7+
-    public bool FindPath(
-                            int sourceIndex, int targetIndex,
-                            AbstractGraph<NodeType, EdgeType> sourceGraph,
-                            ref List<int> path
-                        )
+    protected override bool FindPath(
+                                    int sourceIndex, int targetIndex,
+                                    AbstractGraph<NodeType, EdgeType> sourceGraph,
+                                    ref List<int> path
+                                )
     {
-        var validation = validateTheSearch(sourceIndex, targetIndex, sourceGraph);
-        if (validation == GraphSearchCommons.SearchValidationFlgas.invalidIndices)
-        {
-            return false;
-        }
-        else if (validation == GraphSearchCommons.SearchValidationFlgas.atTheTarget)
-        {
-            return true;
-        }
-
-        // Preparation for the search
-        Reset();
-
         HelperEdge startEdge = new HelperEdge(sourceIndex, sourceIndex, 0f);
 
         searchStack.Push(startEdge);
@@ -205,36 +147,20 @@ public class GraphDFS<NodeType, EdgeType>
     // Returns true if a path exists, returns false otherwise.
     //
     // TODO Replace ref with in if one day Unity supports C# 7+
-    public bool FindPath(
-                            int sourceIndex, int targetIndex,
-                            AbstractGraph<NodeType, EdgeType> sourceGraph,
-                            ref List<int> path,
-                            //ref List<GraphEdge> spanningTree
-                            ref List<HelperEdge> spanningTree
-                        )
+    protected override bool FindPath(
+                                    int sourceIndex, int targetIndex,
+                                    AbstractGraph<NodeType, EdgeType> sourceGraph,
+                                    ref List<int> path,
+                                    ref List<HelperEdge> spanningTree
+                                )
     {
-        var validation = validateTheSearch(sourceIndex, targetIndex, sourceGraph);
-        if(validation == GraphSearchCommons.SearchValidationFlgas.invalidIndices)
-        {
-            return false;
-        }
-        else if(validation == GraphSearchCommons.SearchValidationFlgas.atTheTarget)
-        {
-            return true;
-        }
-
-        // Preparation for the search
-        Reset();
-
         HelperEdge startEdge = new HelperEdge(sourceIndex, sourceIndex, 0f);
-
         searchStack.Push(startEdge);
 
         // Search
         while (searchStack.Count > 0)
         {
             // Get the top element of the stack
-            //EdgeType next = searchStack.Peek();
             HelperEdge next = searchStack.Peek();
             searchStack.Pop();
 
@@ -275,49 +201,4 @@ public class GraphDFS<NodeType, EdgeType>
         // No path to the target
         return false;
     }
-
-    private GraphSearchCommons.SearchValidationFlgas validateTheSearch(
-                                                                            int sourceIndex, int targetIndex,
-                                                                            AbstractGraph<NodeType, EdgeType> sourceGraph
-                                                                        )
-    {
-        if (sourceIndex == NodeCommons.InvalidNodeId || targetIndex == NodeCommons.InvalidNodeId)
-        {
-            ErrorPrinter.PrintError(
-                                        "GraphDFS", "validateTheSearch", "Has invalid indices for SOURCE: " +
-                                        sourceIndex + " TARGET: " + targetIndex, "Cihan"
-                                    );
-            return GraphSearchCommons.SearchValidationFlgas.invalidIndices;
-        }
-
-        if (sourceGraph.GetNode(sourceIndex) == null || sourceGraph.GetNode(targetIndex) == null)
-        {
-            ErrorPrinter.PrintError(
-                                        "GraphDFS", "validateTheSearch", "Has invalid nodes in the grap! SOURCE: " +
-                                        sourceIndex + " TARGET: " + targetIndex, "Cihan"
-                                    );
-            return GraphSearchCommons.SearchValidationFlgas.invalidIndices;
-        }
-
-        if (sourceIndex == targetIndex)
-        {
-            return GraphSearchCommons.SearchValidationFlgas.atTheTarget;
-        }
-
-        return GraphSearchCommons.SearchValidationFlgas.valid;
-    }
-
-    // Helper method to extract the path via the route member
-    private void GetTargetPath(int sourceIndex, int targetIndex, ref List<int> path)
-    {
-        int nd = targetIndex;
-        path.Insert(0, nd);
-
-        while (nd != sourceIndex)
-        {
-            nd = route[nd];
-            path.Insert(0, nd);
-        }
-    }
-
 }
