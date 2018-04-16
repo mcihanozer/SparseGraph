@@ -1,6 +1,7 @@
 // M. Cihan Ozer - April 2017
 
 using System.Collections.Generic;
+using GraphCommons;
 using GraphCommons.GraphSearchCommons;
 
 // Graph depth first search (DFS) algorithm
@@ -8,6 +9,10 @@ using GraphCommons.GraphSearchCommons;
 // Perform less search operation than breadth first search (BFS),
 // guarantees find the path if one exist, but does not guarantees
 // that the found path contains the fewest edges possible.
+//
+// Since DFS produces a spanning tree, it does not take the edge weights
+// into account. So, DFS is not perfectly suitable for using the weighted
+// graphs.
 sealed class GraphDFS<NodeType, EdgeType> : AbstractGraphSearch<NodeType, EdgeType>
         where NodeType : GraphNode
         where EdgeType : GraphEdge
@@ -43,7 +48,7 @@ sealed class GraphDFS<NodeType, EdgeType> : AbstractGraphSearch<NodeType, EdgeTy
     // TODO Replace ref with in if one day Unity supports C# 7+
     protected override bool FindPath(int sourceIndex, int targetIndex, AbstractGraph<NodeType, EdgeType> sourceGraph)
     {
-        HelperEdge startEdge = new HelperEdge(sourceIndex, sourceIndex, 0f);
+        HelperEdge startEdge = new HelperEdge(sourceIndex, sourceIndex, EdgeCommons.DefaultEdgeCost);
 
         searchStack.Push(startEdge);
 
@@ -97,7 +102,7 @@ sealed class GraphDFS<NodeType, EdgeType> : AbstractGraphSearch<NodeType, EdgeTy
                                     ref List<int> path
                                 )
     {
-        HelperEdge startEdge = new HelperEdge(sourceIndex, sourceIndex, 0f);
+        HelperEdge startEdge = new HelperEdge(sourceIndex, sourceIndex, EdgeCommons.DefaultEdgeCost);
 
         searchStack.Push(startEdge);
 
@@ -154,7 +159,7 @@ sealed class GraphDFS<NodeType, EdgeType> : AbstractGraphSearch<NodeType, EdgeTy
                                     ref List<HelperEdge> spanningTree
                                 )
     {
-        HelperEdge startEdge = new HelperEdge(sourceIndex, sourceIndex, 0f);
+        HelperEdge startEdge = new HelperEdge(sourceIndex, sourceIndex, EdgeCommons.DefaultEdgeCost);
         searchStack.Push(startEdge);
 
         // Search
