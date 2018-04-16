@@ -1,6 +1,7 @@
 // M. Cihan Ozer - April 2017
 
 using System.Collections.Generic;
+using GraphCommons;
 using GraphCommons.GraphSearchCommons;
 
 // Graph breadth first search (BFS) algorithm
@@ -11,6 +12,10 @@ using GraphCommons.GraphSearchCommons;
 // the smallest number of edges). More suitable for small search spaces
 // (because of high branching factor: BFS will require a lot of memory
 // and perform poorly if the branching factor is high).
+//
+// Since BFS produces a spanning tree, it does not take the edge weights
+// into account. So, BFS is not perfectly suitable for using the weighted
+// graphs.
 sealed class GraphBFS<NodeType, EdgeType> : AbstractGraphSearch<NodeType, EdgeType>
         where NodeType : GraphNode
         where EdgeType : GraphEdge
@@ -46,7 +51,7 @@ sealed class GraphBFS<NodeType, EdgeType> : AbstractGraphSearch<NodeType, EdgeTy
     // TODO Replace ref with in if one day Unity supports C# 7+
     protected override bool FindPath(int sourceIndex, int targetIndex, AbstractGraph<NodeType, EdgeType> sourceGraph)
     {
-        HelperEdge startEdge = new HelperEdge(sourceIndex, sourceIndex, 0f);
+        HelperEdge startEdge = new HelperEdge(sourceIndex, sourceIndex, EdgeCommons.DefaultEdgeCost);
 
         searchQueue.Enqueue(startEdge);
         visitingList[sourceIndex] = GraphSearchCommons.SearchFlags.visited;
@@ -99,7 +104,7 @@ sealed class GraphBFS<NodeType, EdgeType> : AbstractGraphSearch<NodeType, EdgeTy
                                     ref List<int> path
                                 )
     {
-        HelperEdge startEdge = new HelperEdge(sourceIndex, sourceIndex, 0f);
+        HelperEdge startEdge = new HelperEdge(sourceIndex, sourceIndex, EdgeCommons.DefaultEdgeCost);
 
         searchQueue.Enqueue(startEdge);
         visitingList[sourceIndex] = GraphSearchCommons.SearchFlags.visited;
@@ -155,7 +160,7 @@ sealed class GraphBFS<NodeType, EdgeType> : AbstractGraphSearch<NodeType, EdgeTy
                                     ref List<HelperEdge> spanningTree
                                 )
     {
-        HelperEdge startEdge = new HelperEdge(sourceIndex, sourceIndex, 0f);
+        HelperEdge startEdge = new HelperEdge(sourceIndex, sourceIndex, EdgeCommons.DefaultEdgeCost);
 
         searchQueue.Enqueue(startEdge);
         visitingList[sourceIndex] = GraphSearchCommons.SearchFlags.visited;
